@@ -27,25 +27,6 @@ public class Scoreboard {
 
     private String nonStrikerPlayer ;
 
-    public Scoreboard(TeamBatting teamBatting, List<Batsman> playerList, Integer numberOfPlayers, Integer numberOfOvers) {
-        this.teamBatting = teamBatting;
-        this.playerList = playerList;
-        this.numberOfPlayers = numberOfPlayers;
-        this.numberOfOvers = numberOfOvers;
-    }
-
-    public Scoreboard(TeamBatting teamBatting, List<Batsman> playerList, Integer numberOfPlayers, Integer numberOfOvers, Integer currScore, Integer ballsBowled, Integer wicketsDown, Boolean inningsOver, String strikerPlayer, String nonStrikerPlayer) {
-        this.teamBatting = teamBatting;
-        this.playerList = playerList;
-        this.numberOfPlayers = numberOfPlayers;
-        this.numberOfOvers = numberOfOvers;
-        this.currScore = currScore;
-        this.ballsBowled = ballsBowled;
-        this.wicketsDown = wicketsDown;
-        this.inningsOver = inningsOver;
-        this.strikerPlayer = strikerPlayer;
-        this.nonStrikerPlayer = nonStrikerPlayer;
-    }
 
     public Scoreboard(TeamBatting teamBatting, List<Batsman> batsmen, Integer numberOfPlayers, int overs, Map<String, Integer> playerOrder) {
         this.teamBatting = teamBatting;
@@ -77,9 +58,19 @@ public class Scoreboard {
             this.currScore++;
             return false;
         }
+
+        //System.out.println("Striker: " + this.strikerPlayer + ", non: " + this.nonStrikerPlayer);
         playerList.get(playerOrdeMap.get(strikerPlayer)-1).incrementNumberOfBallsFaced();
-        System.out.println("Striker: " + this.strikerPlayer + ", non: " + this.nonStrikerPlayer);
         this.updateBallsBowled();
+        this.updateScore(ballResult);
+        if(this.getBallsBowled() %6 == 0){
+            this.strikeChange();
+        }
+
+        return true;
+    }
+
+    private void updateScore(String ballResult) {
         switch(ballResult) {
             case Ball.WICKET:
                 this.wicketsDown++;
@@ -87,8 +78,8 @@ public class Scoreboard {
                 if(this.wicketsDown == this.numberOfPlayers - 1){
                     inningsOver = true;
                 } else {
-                   // strikerPlayer = Math.max(strikerPlayer, nonStrikerPlayer) + 1;
-                   int nextStriker= Math.max(playerOrdeMap.get(strikerPlayer), playerOrdeMap.get(nonStrikerPlayer)) + 1;
+                    // strikerPlayer = Math.max(strikerPlayer, nonStrikerPlayer) + 1;
+                    int nextStriker= Math.max(playerOrdeMap.get(strikerPlayer), playerOrdeMap.get(nonStrikerPlayer)) + 1;
                     this.strikerPlayer=getNextPlayer(nextStriker);
                 }
                 break;
@@ -100,8 +91,8 @@ public class Scoreboard {
                 this.strikeChange();
                 break;
             case Ball.THREE:
-                currScore += 2;
-                playerList.get(playerOrdeMap.get(strikerPlayer)-1).updateScore(2);
+                currScore += 3;
+                playerList.get(playerOrdeMap.get(strikerPlayer)-1).updateScore(3);
                 break;
             case Ball.FOUR:
                 currScore += 4;
@@ -117,12 +108,6 @@ public class Scoreboard {
                 throw new CricketScoreBoardException(ExceptionType.INVALID_BALL_OUTCOME, "invalid ball result:" +
                         ballResult);
         }
-
-        if(this.getBallsBowled() %6 == 0){
-            this.strikeChange();
-        }
-
-        return true;
     }
 
     private String getNextPlayer(int nextStriker) {
