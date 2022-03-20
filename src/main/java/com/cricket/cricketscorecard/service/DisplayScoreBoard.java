@@ -12,8 +12,13 @@ public class DisplayScoreBoard {
         displayScoreByPlayers(scoreboard);
         displayTotalScore(scoreboard);
         displayOversBowled(scoreboard);
+        displayOnStrike(scoreboard);
         System.out.println();
         System.out.println();
+    }
+
+    private void displayOnStrike(Scoreboard scoreboard) {
+        System.out.println("On Strike: "+scoreboard.getStrikerPlayer());
     }
 
     private void displayScoreByPlayers(Scoreboard scoreboard) {
@@ -32,6 +37,7 @@ public class DisplayScoreBoard {
     private void displayTotalScore(Scoreboard scoreboard) {
         System.out.println("Total: " + scoreboard.getCurrScore() + "/" + scoreboard.getWicketsDown());
     }
+
 
     private void displayOversBowled(Scoreboard scoreboard) {
         if(scoreboard.getBallsBowled() % 6 == 0){

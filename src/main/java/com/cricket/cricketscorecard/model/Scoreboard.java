@@ -73,26 +73,21 @@ public class Scoreboard {
     private void updateScore(String ballResult) {
         switch(ballResult) {
             case Ball.WICKET:
-                this.wicketsDown++;
-                //System.out.println("wicketsDown= "+this.wicketsDown+" numberOfPlayers= "+this.numberOfPlayers);
-                if(this.wicketsDown == this.numberOfPlayers - 1){
-                    inningsOver = true;
-                } else {
-                    // strikerPlayer = Math.max(strikerPlayer, nonStrikerPlayer) + 1;
-                    int nextStriker= Math.max(playerOrdeMap.get(strikerPlayer), playerOrdeMap.get(nonStrikerPlayer)) + 1;
-                    this.strikerPlayer=getNextPlayer(nextStriker);
-                }
+                updateWicket();
                 break;
             case Ball.ONE:
-            case Ball.TWO:
-                int runsOnBall = Integer.valueOf(ballResult);
-                currScore += runsOnBall;
-                playerList.get(playerOrdeMap.get(strikerPlayer)-1).updateScore(runsOnBall);
+                currScore += 1;
+                playerList.get(playerOrdeMap.get(strikerPlayer)-1).updateScore(1);
                 this.strikeChange();
+                break;
+            case Ball.TWO:
+                currScore += 2;
+                playerList.get(playerOrdeMap.get(strikerPlayer)-1).updateScore(2);
                 break;
             case Ball.THREE:
                 currScore += 3;
                 playerList.get(playerOrdeMap.get(strikerPlayer)-1).updateScore(3);
+                this.strikeChange();
                 break;
             case Ball.FOUR:
                 currScore += 4;
@@ -107,6 +102,18 @@ public class Scoreboard {
             default:
                 throw new CricketScoreBoardException(ExceptionType.INVALID_BALL_OUTCOME, "invalid ball result:" +
                         ballResult);
+        }
+    }
+
+    private void updateWicket() {
+        this.wicketsDown++;
+        //System.out.println("wicketsDown= "+this.wicketsDown+" numberOfPlayers= "+this.numberOfPlayers);
+        if(this.wicketsDown == this.numberOfPlayers - 1){
+            inningsOver = true;
+        } else {
+            // strikerPlayer = Math.max(strikerPlayer, nonStrikerPlayer) + 1;
+            int nextStriker= Math.max(playerOrdeMap.get(strikerPlayer), playerOrdeMap.get(nonStrikerPlayer)) + 1;
+            this.strikerPlayer=getNextPlayer(nextStriker);
         }
     }
 

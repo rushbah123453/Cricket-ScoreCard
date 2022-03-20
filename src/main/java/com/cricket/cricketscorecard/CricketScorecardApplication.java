@@ -24,14 +24,14 @@ public class CricketScorecardApplication {
 
 		MatchController match=new MatchController();
 		match.startMatch();
-		ScoreBoardController scoreBoardA=new ScoreBoardController();
-		Scoreboard scoreboardA=scoreBoardA.getScoreBoard(match,TeamBatting.TEAMA);
+		ScoreBoardController scoreBoard=new ScoreBoardController();
+		Scoreboard scoreboardA=scoreBoard.getScoreBoard(match,TeamBatting.TEAMA);
 		InningsController firstInnings=new InningsController(scoreboardA);
 		firstInnings.startInnings(match.getOvers());
 
 
 		Integer target = scoreboardA.getCurrScore();
-		Scoreboard scoreboardB=scoreBoardA.getScoreBoard(match,TeamBatting.TEAMB);
+		Scoreboard scoreboardB=scoreBoard.getScoreBoard(match,TeamBatting.TEAMB);
 		InningsController secondInnings=new InningsController(scoreboardB);
 		secondInnings.startSecondInnings(target,match.getNumberOfPlayers(),match.getOvers());
 
